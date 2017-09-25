@@ -1,0 +1,23 @@
+{
+  "name": "contract_store",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jobop/contract_store.git"
+  },
+  "author": "CuttleFish",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jobop/contract_store/issues"
+  },
+  "homepage": "https://github.com/jobop/contract_store#readme",
+  "dependencies": {
+    "contract_store_api": "^1.0.0",
+    "zeppelin-solidity": "^1.3.0"
+  }
+}
