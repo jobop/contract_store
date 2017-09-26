@@ -1,61 +1,129 @@
 pragma solidity ^0.4.13;
 import 'zeppelin-solidity/contracts/lifecycle/Destructible.sol';
+import 'zeppelin-solidity/contracts/payment/PullPayment.sol';
 import 'contract_store_api/contracts/Generatable.sol';
-contract ContractFactory is Destructible {
+
+contract ContractFactory is Destructible,PullPayment{
+
+    uint256 public diviRate;
+    uint256 public developerTemplateAmountLimit;
+    address public platformWithdrawAccount;
 
 
 	struct userContract{
 		string contractName;
+		uint256 templateKey;
 		address contractAddress;
 	}
 
 	struct contractTemplate{
-		string contractName;
+		string templateName;
 		address contractGeneratorAddress;
+		address developerWithAddress;
+		string abiStr;
 	}
 
-    mapping(address => userContract[]) public userContracts;
+    mapping(address => userContract[]) public userContractsMap;
     mapping(uint256 => contractTemplate) public contractTemplateAddresses;
 
-    event ContractCreated(address indexed creator,address contractAddress);
+    event ContractCreated(address indexed creator,string templateName,uint256 templateKey,address contractAddress);
+    event ContractTemplatePublished(uint256 indexed distinctNeedAmountByWei,address  creator,string templateName,address contractGeneratorAddress);
 
     function ContractFactory(){
+        //0~10
+        diviRate=5;
+        platformWithdrawAccount=0xbe62b2978bc887f0600a3ffc78b043b549e41e33;
+        developerTemplateAmountLimit=500000000000000000;
     }
 
-    function creditSideCreateContract(uint256 _pledgeSymbolIndex,uint256 _interestRate,uint256 _targetPledgeAmount,uint256 _targetCrcAmount,uint256 _startTime,uint256 _endTime,uint256 _waitRedeemTime,uint256 _closePositionRate) returns(CreditContractTemplate) {
-        CreditContractTemplate target = new CreditContractTemplate();
-        target.setBaseInfo(msg.sender,0x0,_pledgeSymbolIndex,_interestRate,_targetPledgeAmount,_targetCrcAmount, _startTime, _endTime, _waitRedeemTime, _closePositionRate,crcTokenAddress,tokenPriceManagerAddress);
-        address[] storage contracts = creditSideContracts[msg.sender];
-        contracts.push(target);
-        CreditContractCreated(1,msg.sender,target);
-        return target;
+    function () payable external{
+        //根据支付金额找到相应模板
+        contractTemplate storage ct = contractTemplateAddresses[msg.value];
+        if(ct.contractGeneratorAddress!=0x0){
+            address contractTemplateAddress = ct.contractGeneratorAddress;
+            string templateName = ct.templateName;
+            address developerWithAddress=ct.developerWithAddress;
+
+            //找到相应生成器并生产目标合约
+            Generatable generator = Generatable(contractTemplateAddress);
+            address target = generator.generate();
+
+            //转移拥有者
+            Ownable ownableTarget = Ownable(target);
+            ownableTarget.transferOwnership(msg.sender);
+
+            //记录用户合约
+            userContract[] storage userContracts = userContractsMap[msg.sender];
+            userContracts.push(userContract(templateName,msg.value,target));
+
+            //开发者分成
+            //按分成比例计算分成
+            if(diviRate==0){
+                 asyncSend(platformWithdrawAccount,msg.value);
+            }else{
+                uint256 developerAmount=msg.value.mul(diviRate).div(10);
+                uint256 platformAmount=msg.value.sub(developerAmount);
+                asyncSend(developerWithAddress,developerAmount);
+                asyncSend(platformWithdrawAccount,platformAmount);
+            }
+            ContractCreated(msg.sender,templateName,msg.value,target);
+        }else{
+            revert();
+        }
     }
 
+    /**
+    *生成器实现Generatable接口,并且合约实现了ownerable接口，都可以通过此函数上传（TODO：如何校验？）
+    */
+    function publishContractTemplate(uint256 distinctNeedAmountByWei, string _templateName,address _contractGeneratorAddress,address _developerWithAddress,string _abiStr) public
+    {
+         //非owner，不允许发布0.5eth以下的模板
+         if(msg.sender!=owner){
+            require(distinctNeedAmountByWei > developerTemplateAmountLimit);
+         }
 
-    function debitSideCreateContract(uint256 _pledgeSymbolIndex,uint256 _interestRate,uint256 _targetPledgeAmount,uint256 _targetCrcAmount,uint256 _startTime,uint256 _endTime,uint256 _waitRedeemTime,uint256 _closePositionRate) returns(CreditContractTemplate) {
-        CreditContractTemplate target = new CreditContractTemplate();
-        target.setBaseInfo(0x0,msg.sender,_pledgeSymbolIndex,_interestRate,_targetPledgeAmount,_targetCrcAmount, _startTime, _endTime, _waitRedeemTime, _closePositionRate,crcTokenAddress,tokenPriceManagerAddress);
-        address[] storage contracts = debitSideContracts[msg.sender];
-        contracts.push(target);
-        CreditContractCreated(2,msg.sender,target);
-        return target;
+         contractTemplate storage ct = contractTemplateAddresses[distinctNeedAmountByWei];
+         if(ct.contractGeneratorAddress!=0x0){
+            revert();
+         }else{
+            ct.templateName=_templateName;
+            ct.contractGeneratorAddress=_contractGeneratorAddress;
+            ct.developerWithAddress=_developerWithAddress;
+            ct.abiStr=_abiStr;
+            ContractTemplatePublished(distinctNeedAmountByWei,msg.sender,_templateName,_contractGeneratorAddress);
+         }
     }
 
-
-    function queryCreditSideContract(address _creditSide)  constant public returns(address[]){
-        return creditSideContracts[_creditSide];
+    function queryPublishedContractTemplate(uint256 distinctNeedAmountByWei) public constant returns(string,address,address,string) {
+        contractTemplate storage ct = contractTemplateAddresses[distinctNeedAmountByWei];
+        if(ct.contractGeneratorAddress!=0x0){
+            return (ct.templateName,ct.contractGeneratorAddress,ct.developerWithAddress,ct.abiStr);
+        }else{
+            return ('',0x0,0x0,'');
+        }
     }
 
-    function queryDebitSideContract(address _debitSide)  constant public returns(address[]){
-        return debitSideContracts[_debitSide];
+    function queryUserContract(address user,uint256 _index) public constant returns(string,uint256,address){
+        userContract[] storage ucs = userContractsMap[user];
+        return (ucs[_index].contractName,ucs[_index].templateKey,ucs[_index].contractAddress);
     }
 
-    function changeCrcTokenAddress(address _crcTokenAddress) external onlyOwner(){
-        crcTokenAddress=_crcTokenAddress;
+    function queryUserContractCount(address user) public constant returns (uint256){
+        userContract[] storage ucs = userContractsMap[user];
+        return ucs.length;
     }
 
-    function changeTokenPriceManagerAddress(address _tokenPriceManagerAddress) external onlyOwner(){
-        tokenPriceManagerAddress=_tokenPriceManagerAddress;
+    function changeDiviRate(uint256 _diviRate) external onlyOwner(){
+        diviRate=_diviRate;
     }
+
+    function changePlatformWithdrawAccount(address _platformWithdrawAccount) external onlyOwner(){
+        platformWithdrawAccount=_platformWithdrawAccount;
+    }
+
+    function changeDeveloperTemplateAmountLimit(uint256 _developerTemplateAmountLimit) external onlyOwner(){
+        developerTemplateAmountLimit=_developerTemplateAmountLimit;
+    }
+
 }
 
