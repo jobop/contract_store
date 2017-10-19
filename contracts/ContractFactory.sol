@@ -25,6 +25,7 @@ contract ContractFactory is Destructible,PullPayment{
 
     mapping(address => userContract[]) public userContractsMap;
     mapping(uint256 => contractTemplate) public contractTemplateAddresses;
+    mapping(uint256 => uint256) public skipMap;
 
     event ContractCreated(address indexed creator,string templateName,uint256 templateKey,address contractAddress);
     event ContractTemplatePublished(uint256 indexed distinctNeedAmountByWei,address  creator,string templateName,address contractGeneratorAddress);
@@ -37,6 +38,8 @@ contract ContractFactory is Destructible,PullPayment{
     }
 
     function () payable external{
+        //不存在忽略列表中才能继续
+        require(skipMap[msg.value]==0);
         //根据支付金额找到相应模板
         contractTemplate storage ct = contractTemplateAddresses[msg.value];
         if(ct.contractGeneratorAddress!=0x0){
@@ -124,6 +127,12 @@ contract ContractFactory is Destructible,PullPayment{
     function changeDeveloperTemplateAmountLimit(uint256 _developerTemplateAmountLimit) external onlyOwner(){
         developerTemplateAmountLimit=_developerTemplateAmountLimit;
     }
+    function addSkipPrice(uint256 price) external onlyOwner(){
+        skipMap[price]=1;
+    }
 
+    function removeSkipPrice(uint256 price) external onlyOwner(){
+        skipMap[price]=0;
+    }
 }
 
