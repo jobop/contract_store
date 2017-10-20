@@ -49,11 +49,7 @@ contract ContractFactory is Destructible,PullPayment{
 
             //找到相应生成器并生产目标合约
             Generatable generator = Generatable(contractTemplateAddress);
-            address target = generator.generate();
-
-            //转移拥有者
-            Ownable ownableTarget = Ownable(target);
-            ownableTarget.transferOwnership(msg.sender);
+            address target = generator.generate(msg.sender);
 
             //记录用户合约
             userContract[] storage userContracts = userContractsMap[msg.sender];

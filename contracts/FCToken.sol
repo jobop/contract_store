@@ -181,8 +181,9 @@ contract FCToken is StandardToken,Ownable{
 }
 
 contract FCTokenGenerator is Generatable{
-	function generate() public returns(address){
+	function generate(address contractOwner) public returns(address){
 		FCToken fct =new FCToken();
+		fct.transferOwnership(contractOwner);
 		return fct;
 	}
 }

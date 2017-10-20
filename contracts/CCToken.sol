@@ -235,8 +235,9 @@ contract CCToken is StandardToken,Ownable{
 }
 
 contract CCTokenGenerator is Generatable{
-	function generate() public returns(address){
+	function generate(address contractOwner) public returns(address){
          CCToken cct=new CCToken();
+         cct.transferOwnership(contractOwner);
          return cct;
     }
 

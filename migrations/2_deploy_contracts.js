@@ -1,6 +1,8 @@
-var ConvertLib = artifacts.require("./ConvertLib.sol");
-var MetaCoin = artifacts.require("./MetaCoin.sol");
-
+var ContractFactory = artifacts.require("./ContractFactory.sol");
+var CFToken =artifacts.require("./FCToken.sol");
+var CCToken =artifacts.require("./CCToken.sol");
 module.exports = function(deployer) {
-  deployer.deploy(ConvertLib);
+    deployer.deploy(ContractFactory);
+    deployer.deploy(CFToken);
+    deployer.deploy(CCToken);
 };
