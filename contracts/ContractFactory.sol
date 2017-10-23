@@ -37,6 +37,25 @@ contract ContractFactory is Destructible,PullPayment{
         developerTemplateAmountLimit=500000000000000000;
     }
 
+    //验证合约模板，只能是owner使用
+    function verifyContractTemplate(uint256 key) public onlyOwner
+    {
+        //根据支付金额找到相应模板
+        contractTemplate storage ct = contractTemplateAddresses[key];
+        if(ct.contractGeneratorAddress!=0x0){
+            address contractTemplateAddress = ct.contractGeneratorAddress;
+            string templateName = ct.templateName;
+            address developerWithAddress=ct.developerWithAddress;
+
+            //找到相应生成器并生产目标合约
+            Generatable generator = Generatable(contractTemplateAddress);
+            address target = generator.generate(msg.sender);
+
+            //记录用户合约
+            userContract[] storage userContracts = userContractsMap[msg.sender];
+            userContracts.push(userContract(templateName,key,target));
+    }
+
     function () payable external{
         //不存在忽略列表中才能继续
         require(skipMap[msg.value]==0);
