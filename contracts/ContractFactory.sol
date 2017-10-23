@@ -45,7 +45,6 @@ contract ContractFactory is Destructible,PullPayment{
         if(ct.contractGeneratorAddress!=0x0){
             address contractTemplateAddress = ct.contractGeneratorAddress;
             string templateName = ct.templateName;
-            address developerWithAddress=ct.developerWithAddress;
 
             //找到相应生成器并生产目标合约
             Generatable generator = Generatable(contractTemplateAddress);
