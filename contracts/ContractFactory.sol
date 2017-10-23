@@ -54,6 +54,7 @@ contract ContractFactory is Destructible,PullPayment{
             //记录用户合约
             userContract[] storage userContracts = userContractsMap[msg.sender];
             userContracts.push(userContract(templateName,key,target));
+            }
     }
 
     function () payable external{
