@@ -1,0 +1,457 @@
+export const abi = [
+	{
+	  "constant": true,
+	  "inputs": [],
+	  "name": "totalPayments",
+	  "outputs": [
+		{
+		  "name": "",
+		  "type": "uint256"
+		}
+	  ],
+	  "payable": false,
+	  "type": "function"
+	},
+	{
+	  "constant": true,
+	  "inputs": [
+		{
+		  "name": "",
+		  "type": "uint256"
+		}
+	  ],
+	  "name": "contractTemplateAddresses",
+	  "outputs": [
+		{
+		  "name": "templateName",
+		  "type": "string"
+		},
+		{
+		  "name": "contractGeneratorAddress",
+		  "type": "address"
+		},
+		{
+		  "name": "developerWithAddress",
+		  "type": "address"
+		},
+		{
+		  "name": "abiStr",
+		  "type": "string"
+		}
+	  ],
+	  "payable": false,
+	  "type": "function"
+	},
+	{
+	  "constant": true,
+	  "inputs": [
+		{
+		  "name": "user",
+		  "type": "address"
+		}
+	  ],
+	  "name": "queryUserContractCount",
+	  "outputs": [
+		{
+		  "name": "",
+		  "type": "uint256"
+		}
+	  ],
+	  "payable": false,
+	  "type": "function"
+	},
+	{
+	  "constant": true,
+	  "inputs": [],
+	  "name": "platformWithdrawAccount",
+	  "outputs": [
+		{
+		  "name": "",
+		  "type": "address"
+		}
+	  ],
+	  "payable": false,
+	  "type": "function"
+	},
+	{
+	  "constant": true,
+	  "inputs": [
+		{
+		  "name": "user",
+		  "type": "address"
+		},
+		{
+		  "name": "_index",
+		  "type": "uint256"
+		}
+	  ],
+	  "name": "queryUserContract",
+	  "outputs": [
+		{
+		  "name": "",
+		  "type": "string"
+		},
+		{
+		  "name": "",
+		  "type": "uint256"
+		},
+		{
+		  "name": "",
+		  "type": "address"
+		}
+	  ],
+	  "payable": false,
+	  "type": "function"
+	},
+	{
+	  "constant": true,
+	  "inputs": [
+		{
+		  "name": "",
+		  "type": "uint256"
+		}
+	  ],
+	  "name": "skipMap",
+	  "outputs": [
+		{
+		  "name": "",
+		  "type": "uint256"
+		}
+	  ],
+	  "payable": false,
+	  "type": "function"
+	},
+	{
+	  "constant": false,
+	  "inputs": [
+		{
+		  "name": "_diviRate",
+		  "type": "uint256"
+		}
+	  ],
+	  "name": "changeDiviRate",
+	  "outputs": [],
+	  "payable": false,
+	  "type": "function"
+	},
+	{
+	  "constant": false,
+	  "inputs": [],
+	  "name": "withdrawPayments",
+	  "outputs": [],
+	  "payable": false,
+	  "type": "function"
+	},
+	{
+	  "constant": false,
+	  "inputs": [
+		{
+		  "name": "distinctNeedAmountByWei",
+		  "type": "uint256"
+		},
+		{
+		  "name": "_templateName",
+		  "type": "string"
+		},
+		{
+		  "name": "_contractGeneratorAddress",
+		  "type": "address"
+		},
+		{
+		  "name": "_developerWithAddress",
+		  "type": "address"
+		},
+		{
+		  "name": "_abiStr",
+		  "type": "string"
+		}
+	  ],
+	  "name": "publishContractTemplate",
+	  "outputs": [],
+	  "payable": false,
+	  "type": "function"
+	},
+	{
+	  "constant": true,
+	  "inputs": [],
+	  "name": "diviRate",
+	  "outputs": [
+		{
+		  "name": "",
+		  "type": "uint256"
+		}
+	  ],
+	  "payable": false,
+	  "type": "function"
+	},
+	{
+	  "constant": true,
+	  "inputs": [
+		{
+		  "name": "distinctNeedAmountByWei",
+		  "type": "uint256"
+		}
+	  ],
+	  "name": "queryPublishedContractTemplate",
+	  "outputs": [
+		{
+		  "name": "",
+		  "type": "string"
+		},
+		{
+		  "name": "",
+		  "type": "address"
+		},
+		{
+		  "name": "",
+		  "type": "address"
+		},
+		{
+		  "name": "",
+		  "type": "string"
+		}
+	  ],
+	  "payable": false,
+	  "type": "function"
+	},
+	{
+	  "constant": false,
+	  "inputs": [],
+	  "name": "destroy",
+	  "outputs": [],
+	  "payable": false,
+	  "type": "function"
+	},
+	{
+	  "constant": true,
+	  "inputs": [],
+	  "name": "owner",
+	  "outputs": [
+		{
+		  "name": "",
+		  "type": "address"
+		}
+	  ],
+	  "payable": false,
+	  "type": "function"
+	},
+	{
+	  "constant": false,
+	  "inputs": [
+		{
+		  "name": "_platformWithdrawAccount",
+		  "type": "address"
+		}
+	  ],
+	  "name": "changePlatformWithdrawAccount",
+	  "outputs": [],
+	  "payable": false,
+	  "type": "function"
+	},
+	{
+	  "constant": true,
+	  "inputs": [
+		{
+		  "name": "",
+		  "type": "address"
+		},
+		{
+		  "name": "",
+		  "type": "uint256"
+		}
+	  ],
+	  "name": "userContractsMap",
+	  "outputs": [
+		{
+		  "name": "contractName",
+		  "type": "string"
+		},
+		{
+		  "name": "templateKey",
+		  "type": "uint256"
+		},
+		{
+		  "name": "contractAddress",
+		  "type": "address"
+		}
+	  ],
+	  "payable": false,
+	  "type": "function"
+	},
+	{
+	  "constant": false,
+	  "inputs": [
+		{
+		  "name": "price",
+		  "type": "uint256"
+		}
+	  ],
+	  "name": "removeSkipPrice",
+	  "outputs": [],
+	  "payable": false,
+	  "type": "function"
+	},
+	{
+	  "constant": false,
+	  "inputs": [
+		{
+		  "name": "price",
+		  "type": "uint256"
+		}
+	  ],
+	  "name": "addSkipPrice",
+	  "outputs": [],
+	  "payable": false,
+	  "type": "function"
+	},
+	{
+	  "constant": false,
+	  "inputs": [
+		{
+		  "name": "_developerTemplateAmountLimit",
+		  "type": "uint256"
+		}
+	  ],
+	  "name": "changeDeveloperTemplateAmountLimit",
+	  "outputs": [],
+	  "payable": false,
+	  "type": "function"
+	},
+	{
+	  "constant": true,
+	  "inputs": [],
+	  "name": "developerTemplateAmountLimit",
+	  "outputs": [
+		{
+		  "name": "",
+		  "type": "uint256"
+		}
+	  ],
+	  "payable": false,
+	  "type": "function"
+	},
+	{
+	  "constant": true,
+	  "inputs": [
+		{
+		  "name": "",
+		  "type": "address"
+		}
+	  ],
+	  "name": "payments",
+	  "outputs": [
+		{
+		  "name": "",
+		  "type": "uint256"
+		}
+	  ],
+	  "payable": false,
+	  "type": "function"
+	},
+	{
+	  "constant": false,
+	  "inputs": [
+		{
+		  "name": "newOwner",
+		  "type": "address"
+		}
+	  ],
+	  "name": "transferOwnership",
+	  "outputs": [],
+	  "payable": false,
+	  "type": "function"
+	},
+	{
+	  "constant": false,
+	  "inputs": [
+		{
+		  "name": "_recipient",
+		  "type": "address"
+		}
+	  ],
+	  "name": "destroyAndSend",
+	  "outputs": [],
+	  "payable": false,
+	  "type": "function"
+	},
+	{
+	  "inputs": [],
+	  "payable": false,
+	  "type": "constructor"
+	},
+	{
+	  "payable": true,
+	  "type": "fallback"
+	},
+	{
+	  "anonymous": false,
+	  "inputs": [
+		{
+		  "indexed": true,
+		  "name": "creator",
+		  "type": "address"
+		},
+		{
+		  "indexed": false,
+		  "name": "templateName",
+		  "type": "string"
+		},
+		{
+		  "indexed": false,
+		  "name": "templateKey",
+		  "type": "uint256"
+		},
+		{
+		  "indexed": false,
+		  "name": "contractAddress",
+		  "type": "address"
+		}
+	  ],
+	  "name": "ContractCreated",
+	  "type": "event"
+	},
+	{
+	  "anonymous": false,
+	  "inputs": [
+		{
+		  "indexed": true,
+		  "name": "distinctNeedAmountByWei",
+		  "type": "uint256"
+		},
+		{
+		  "indexed": false,
+		  "name": "creator",
+		  "type": "address"
+		},
+		{
+		  "indexed": false,
+		  "name": "templateName",
+		  "type": "string"
+		},
+		{
+		  "indexed": false,
+		  "name": "contractGeneratorAddress",
+		  "type": "address"
+		}
+	  ],
+	  "name": "ContractTemplatePublished",
+	  "type": "event"
+	},
+	{
+	  "anonymous": false,
+	  "inputs": [
+		{
+		  "indexed": true,
+		  "name": "previousOwner",
+		  "type": "address"
+		},
+		{
+		  "indexed": true,
+		  "name": "newOwner",
+		  "type": "address"
+		}
+	  ],
+	  "name": "OwnershipTransferred",
+	  "type": "event"
+	}
+  ];

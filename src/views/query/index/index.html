@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>合约查询</title>
+    <meta charset="utf-8">
+    <meta name="keywords" content="eth钱包">
+    <meta name="description" content="eth合约查询">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="format-detection" content="telephone=no,email=no">
+    <meta name="apple-mobile-web-app-capable" content="no">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="x5-orientation" content="portrait">
+    <script type="text/javascript">
+      (function(doc, win) {
+        var basicWidth = window.basicWidth || 750;
+        var minWidth = 320;
+        var htmlElement = doc.documentElement;
+        var recalc = function() {
+          var clientWidth = htmlElement.clientWidth || (basicWidth / 2);
+          clientWidth = clientWidth < minWidth? minWidth : clientWidth;
+          htmlElement.style.fontSize = 100 * (clientWidth / basicWidth) + 'px';
+        };
+        recalc();
+        if (!win.addEventListener) return;
+        win.addEventListener('resize', recalc, false);
+      })(document, window);
+    </script>
+  </head>
+  <body>
+    <div id="eth"></div>
+  </body>
+</html>
