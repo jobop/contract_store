@@ -156,6 +156,7 @@ contract CCToken is StandardToken,Ownable{
 		uint256 tokenAmount = msg.value.mul(privateOfferingExchangeRate);
 		privateOfferingSupply=privateOfferingSupply.add(tokenAmount);
 		processFunding(privateOfferingExchangeRate);
+		
 	}  
 	
 	

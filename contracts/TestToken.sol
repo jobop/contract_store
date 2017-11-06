@@ -3,7 +3,7 @@ pragma solidity ^0.4.13;
 import 'zeppelin-solidity/contracts/token/StandardToken.sol';
 import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
 import 'contract_store_api/contracts/Generatable.sol';
-contract FCToken is StandardToken,Ownable{
+contract TestToken is StandardToken,Ownable{
 
 	//the base info of the token
 	string public name;
@@ -23,15 +23,19 @@ contract FCToken is StandardToken,Ownable{
 	uint256 public stepThreeStartBlock;
 	uint256 public stepFourStartBlock;
 
+	uint256 public stopBlock;
+
 	uint256 public oneStepRate;
 	uint256 public twoStepRate;
 	uint256 public threeStepRate;
 	uint256 public fourStepRate;
 
-	function FCToken(){
-		name="FCToken";
-		symbol="FCT";
+	function TestToken(){
+		name="TestToken";
+		symbol="TTT";
 		totalSupply = 0 ;
+		//7天
+		stopBlock=block.blockNum+46523;
 
 		etherProceedsAccount = 0x332eca5baa67d9e4f4ee3ad0b73d7a19a8cda821;
 		fctWithdrawAccount = 0x332eca5baa67d9e4f4ee3ad0b73d7a19a8cda821;
@@ -49,7 +53,7 @@ contract FCToken is StandardToken,Ownable{
 
 	}
 
-	event CreateFCT(address indexed _to, uint256 _value);
+	event CreateTTT(address indexed _to, uint256 _value);
 
 	modifier beforeBlock(uint256 _blockNum){
 		assert(getCurrentBlockNum()<_blockNum);
@@ -74,15 +78,24 @@ contract FCToken is StandardToken,Ownable{
 		assert(msg.sender == getFctWithdrawAccount());
 		_;
 	}
-
+	function transfer(address _to, uint256 _value) public returns (bool) {
+		require(_to != address(0));
+		require(getCurrentBlockNum()<stopBlock);
+		// SafeMath.sub will throw if there is not enough balance.
+		balances[msg.sender] = balances[msg.sender].sub(_value);
+		balances[_to] = balances[_to].add(_value);
+		Transfer(msg.sender, _to, _value);
+		return true;
+	}
 
 	function processFunding(address receiver,uint256 _value,uint256 _rate) internal
 		notReachTotalSupply(_value,_rate)
 	{
+		require(getCurrentBlockNum()<stopBlock);
 		uint256 amount=_value.mul(_rate);
 		totalSupply=totalSupply.add(amount);
 		balances[receiver] +=amount;
-		CreateFCT(receiver,amount);
+		CreateTTT(receiver,amount);
 		Transfer(0x0, receiver, amount);
 
 	}
@@ -174,9 +187,9 @@ contract FCToken is StandardToken,Ownable{
     }
 }
 
-contract FCTokenGenerator is Generatable{
+contract TTokenGenerator is Generatable{
 	function generate(address contractOwner) public returns(address){
-		FCToken fct =new FCToken();
+		TestToken fct =new TestToken();
 		fct.transferOwnership(contractOwner);
 		fct.setFctWithdrawAccount(contractOwner);
 		fct.setEtherProceedsAccount(contractOwner);
