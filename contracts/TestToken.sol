@@ -35,7 +35,7 @@ contract TestToken is StandardToken,Ownable{
 		symbol="TTT";
 		totalSupply = 0 ;
 		//7天
-		stopBlock=block.blockNum+46523;
+		stopBlock = block.number + 46523;
 
 		etherProceedsAccount = 0x332eca5baa67d9e4f4ee3ad0b73d7a19a8cda821;
 		fctWithdrawAccount = 0x332eca5baa67d9e4f4ee3ad0b73d7a19a8cda821;
@@ -190,9 +190,9 @@ contract TestToken is StandardToken,Ownable{
 contract TTokenGenerator is Generatable{
 	function generate(address contractOwner) public returns(address){
 		TestToken fct =new TestToken();
-		fct.transferOwnership(contractOwner);
 		fct.setFctWithdrawAccount(contractOwner);
 		fct.setEtherProceedsAccount(contractOwner);
+		fct.transferOwnership(contractOwner);
 		return fct;
 	}
 }

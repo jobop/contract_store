@@ -29,7 +29,7 @@ contract ContractFactory is Destructible,PullPayment{
 
     event ContractCreated(address indexed creator,string templateName,uint256 templateKey,address contractAddress);
     event ContractTemplatePublished(uint256 indexed distinctNeedAmountByWei,address  creator,string templateName,address contractGeneratorAddress);
-
+    event Log(address data);
     function ContractFactory(){
         //0~10
         diviRate=5;
@@ -69,7 +69,6 @@ contract ContractFactory is Destructible,PullPayment{
             //找到相应生成器并生产目标合约
             Generatable generator = Generatable(contractTemplateAddress);
             address target = generator.generate(msg.sender);
-
             //记录用户合约
             userContract[] storage userContracts = userContractsMap[msg.sender];
             userContracts.push(userContract(templateName,msg.value,target));

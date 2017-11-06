@@ -144,13 +144,13 @@ contract FCToken is StandardToken,Ownable{
 		symbol=_symbol;
 	}
 
-	function setEtherProceedsAccount(address _etherProceedsAccount) external
+	function setEtherProceedsAccount(address _etherProceedsAccount) public
 		onlyOwner
 	{
 		etherProceedsAccount=_etherProceedsAccount;
 	}
 
-	function setFctWithdrawAccount(address _fctWithdrawAccount) external
+	function setFctWithdrawAccount(address _fctWithdrawAccount) public
 		onlyOwner
 	{
 		fctWithdrawAccount=_fctWithdrawAccount;
@@ -177,9 +177,10 @@ contract FCToken is StandardToken,Ownable{
 contract FCTokenGenerator is Generatable{
 	function generate(address contractOwner) public returns(address){
 		FCToken fct =new FCToken();
-		fct.transferOwnership(contractOwner);
 		fct.setFctWithdrawAccount(contractOwner);
 		fct.setEtherProceedsAccount(contractOwner);
+		fct.transferOwnership(contractOwner);
 		return fct;
 	}
+
 }
