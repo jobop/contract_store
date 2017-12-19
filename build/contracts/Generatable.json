@@ -1,0 +1,27 @@
+{
+  "contract_name": "Generatable",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "contractOwner",
+          "type": "address"
+        }
+      ],
+      "name": "generate",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    }
+  ],
+  "unlinked_binary": "0x",
+  "networks": {},
+  "schema_version": "0.0.5",
+  "updated_at": 1508750116002
+}
